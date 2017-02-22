@@ -364,6 +364,11 @@ def process(args):
 
         name = sanitize(name)
         
+        # Change name if broadcast is live
+        if broadcast_public['broadcast']['state'] == 'RUNNING':
+            name = "{}.live".format(name)
+        
+        # Check if filename exists and append/increment number if so.
         tempfilename = os.getcwd() + "\\" + name + ".ts"
         if os.path.isfile(tempfilename):
             i = 0
@@ -381,8 +386,6 @@ def process(args):
                 continue
 
             # The stream is live, start live capture.
-            name = "{}.live".format(name)
-
             if url_parts['token'] == "":
                 req_url = PERISCOPE_GETACCESS.format("broadcast_id", url_parts['broadcast_id'])
             else:
